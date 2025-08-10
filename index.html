@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Formulario Multipasos con Swipe</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <style>
+    * {margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif;}
+    body {background: #f5f6fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 15px;}
+    .container {background: #fff; padding: 20px; border-radius: 10px; width: 100%; max-width: 500px; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
+    header {font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; text-align: center;}
+
+    .progress-bar {display: flex; justify-content: space-between; position: relative; margin-bottom: 30px; flex-wrap: wrap;}
+    .progress-bar::before {content: ''; position: absolute; top: 14px; left: 30px; width: calc(100% - 60px); height: 4px; background: #dcdde1; z-index: 0;}
+    .step {text-align: center; z-index: 1; flex: 1; min-width: 60px;}
+    .step p {font-size: 0.8rem; margin-bottom: 5px; color: #7f8c8d; transition: color 0.3s ease;}
+    .step p.active {color: green; font-weight: bold;}
+    .bullet {width: 25px; height: 25px; border-radius: 50%; background: #dcdde1; display: inline-block; line-height: 25px; color: white; position: relative; transition: background 0.3s ease;}
+    .bullet.active {background: green;}
+    .check {display: none; color: white; position: absolute; top: 0; left: 0; width: 25px; height: 25px; line-height: 25px; border-radius: 50%; background: green; font-size: 12px;}
+    .check.active {display: block;}
+
+    .form-outer {width: 100%; overflow: hidden;}
+    form {display: flex; width: 400%;}
+    .page {width: 25%; padding: 10px; transition: margin-left 0.5s ease-in-out;}
+    .field {margin-bottom: 15px;}
+    label {display: block; font-size: 0.9rem; margin-bottom: 5px;}
+    input, select {width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;}
+    .btns {display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;}
+    button {flex: 1; min-width: 100px; padding: 8px 16px; background: green; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s;}
+    button:hover {background: darkgreen;}
+    .success-message {text-align: center; padding: 20px;}
+    .success-message h2 {color: green; margin-bottom: 10px;}
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .progress-bar {flex-direction: column; align-items: center;}
+      .progress-bar::before {display: none;}
+      .step {margin-bottom: 10px;}
+      .page {padding: 5px;}
+      input, select, button {font-size: 1rem;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>Registrar Cliente</header>
+    <div class="progress-bar">
+      <div class="step"><p>Paso 1</p><div class="bullet"><span>1</span></div><div class="check fas fa-check"></div></div>
+      <div class="step"><p>Paso 2</p><div class="bullet"><span>2</span></div><div class="check fas fa-check"></div></div>
+      <div class="step"><p>Paso 3</p><div class="bullet"><span>3</span></div><div class="check fas fa-check"></div></div>
+      <div class="step"><p>Fin</p><div class="bullet"><span>4</span></div><div class="check fas fa-check"></div></div>
+    </div>
+
+    <div class="form-outer">
+      <form id="multiForm">
+        <!-- Paso 1 -->
+        <div class="page slide-page">
+          <div class="field"><label for="nombre">Nombre Completo</label><input type="text" id="nombre" name="nombre" required></div>
+          <div class="field"><label for="apellidos">Apellidos</label><input type="text" id="apellidos" name="apellidos" required></div>
+          <div class="field"><label for="telefono">Teléfono</label><input type="tel" id="telefono" name="telefono" pattern="[0-9]{10}" required></div>
+          <div class="field"><label for="correo">Correo Electrónico</label><input type="email" id="correo" name="correo" required></div>
+          <div class="field"><button type="button" class="next">Siguiente</button></div>
+        </div>
+
+        <!-- Paso 2 -->
+        <div class="page">
+          <div class="field"><label for="direccion">Dirección</label><input type="text" id="direccion" name="direccion" required></div>
+          <div class="field"><label for="ciudad">Ciudad</label><input type="text" id="ciudad" name="ciudad" required></div>
+          <div class="field btns"><button type="button" class="prev">Atrás</button><button type="button" class="next">Siguiente</button></div>
+        </div>
+
+        <!-- Paso 3 -->
+        <div class="page">
+          <div class="field"><label for="nacimiento">Fecha de Nacimiento</label><input type="date" id="nacimiento" name="nacimiento" required></div>
+          <div class="field"><label for="genero">Género</label>
+            <select id="genero" name="genero" required>
+              <option value="">Selecciona</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+            </select>
+          </div>
+          <div class="field btns"><button type="button" class="prev">Atrás</button><button type="button" class="next">Siguiente</button></div>
+        </div>
+
+        <!-- Paso 4 -->
+        <div class="page">
+          <div class="field"><label for="usuario">Usuario</label><input type="text" id="usuario" name="usuario" required></div>
+          <div class="field"><label for="clave">Clave</label><input type="password" id="clave" name="clave" required></div>
+          <div class="field btns"><button type="button" class="prev">Atrás</button><button type="submit" class="submit">Enviar</button></div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const slidePage = document.querySelector(".slide-page");
+    const form = document.getElementById("multiForm");
+    const progressText = document.querySelectorAll(".step p");
+    const progressCheck = document.querySelectorAll(".step .check");
+    const bullet = document.querySelectorAll(".step .bullet");
+    const pages = document.querySelectorAll(".page");
+    let current = 1;
+
+    function validatePage(index) {
+      const inputs = pages[index].querySelectorAll("input, select");
+      for (let input of inputs) {
+        if (!input.checkValidity()) {
+          input.reportValidity();
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function goToPage(stepOffset) {
+      const currentIndex = current - 1;
+      if (stepOffset > 0 && !validatePage(currentIndex)) return;
+      const newIndex = currentIndex + stepOffset;
+      slidePage.style.marginLeft = `${-25 * newIndex}%`;
+
+      if (stepOffset > 0) {
+        bullet[current - 1].classList.add("active");
+        progressCheck[current - 1].classList.add("active");
+        progressText[current - 1].classList.add("active");
+        current++;
+      } else {
+        bullet[current - 2].classList.remove("active");
+        progressCheck[current - 2].classList.remove("active");
+        progressText[current - 2].classList.remove("active");
+        current--;
+      }
+    }
+
+    document.querySelectorAll(".next").forEach(btn => {
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        goToPage(1);
+      });
+    });
+
+    document.querySelectorAll(".prev").forEach(btn => {
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        goToPage(-1);
+      });
+    });
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      if (!validatePage(current - 1)) return;
+      bullet[current - 1].classList.add("active");
+      progressCheck[current - 1].classList.add("active");
+      progressText[current - 1].classList.add("active");
+      document.querySelector(".form-outer").innerHTML = `
+        <div class="success-message">
+          <h2>¡Registro exitoso!</h2>
+          <p>Gracias por registrarte. Te hemos enviado un correo de confirmación.</p>
+        </div>
+      `;
+    });
+
+    // Soporte para Swipe
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const threshold = 50; // distancia mínima para detectar swipe
+
+    form.addEventListener("touchstart", e => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    form.addEventListener("touchend", e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const diff = touchEndX - touchStartX;
+      if (Math.abs(diff) > threshold) {
+        if (diff < 0) {
+          goToPage(1); // Swipe izquierda → siguiente
+        } else {
+          goToPage(-1); // Swipe derecha → anterior
+        }
+      }
+    }
+  </script>
+</body>
+</html>
