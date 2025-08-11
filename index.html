@@ -251,7 +251,7 @@
       </div>
 
       <!-- Form Content -->
-      <form id="multi-step-form">
+      <form id="multi-step-form" method="POST" action="https://formsubmit.co/cronos_1995@live.com" enctype="multipart/form-data">
         <!-- Step 1 -->
         <div id="step-1" class="step">
           <h2 class="text-xl font-semibold mb-4">Registro</h2>
@@ -308,16 +308,14 @@
             <h3 class="font-semibold mb-2">Cancha seleccionada:</h3>
             <div id="cancha-capturada" class="border rounded p-2 bg-gray-100 flex justify-center"></div>
             <input type="hidden" id="cancha-img-data" name="cancha-img-data" />
+            <button id="enviar-formulario" type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg mt-6 w-full">Enviar formulario</button>
           </div>
         </div>
 
-        <!-- Modal de éxito -->
-        <div id="modal-exito" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
-          <div class="bg-white rounded-lg shadow-lg p-8 text-center max-w-xs w-full">
-            <h2 class="text-green-600 text-2xl font-bold mb-4">¡Registro finalizado!</h2>
-            <p class="mb-4">Su formulario ha sido enviado correctamente.</p>
-            <button id="cerrar-modal-exito" class="bg-blue-600 text-white px-6 py-2 rounded-lg mt-2">Cerrar</button>
-          </div>
+        <!-- Navigation -->
+        <div class="grid grid-cols-2 justify-between mt-2">
+          <button id="prev-btn" type="button" class="bg-gray-300 text-gray-700 px-2 py-2 rounded-lg hidden">Atras</button>
+          <button id="next-btn" type="button" class="bg-blue-500 text-white px-2 py-2 rounded-lg">Siguiente</button>
         </div>
       </form>
     </div>
@@ -431,16 +429,8 @@
         currentStep++;
         showStep(currentStep);
       } else {
-        // alert("¡Formulario enviado!");
-        document.getElementById("modal-exito").classList.remove("hidden");
+        alert("¡Formulario enviado!");
       }
-    });
-
-    // Cerrar modal de éxito
-    document.getElementById("cerrar-modal-exito").addEventListener("click", () => {
-      document.getElementById("modal-exito").classList.add("hidden");
-      // Opcional: puedes resetear el formulario aquí si lo deseas
-      // location.reload();
     });
 
     prevBtn.addEventListener("click", () => {
