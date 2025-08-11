@@ -1,189 +1,620 @@
 <!DOCTYPE html>
-<html lang="es" dir="ltr">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Formulario Multipasos con Swipe</title>
-  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-  <style>
-    * {margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif;}
-    body {background: #f5f6fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 15px;}
-    .container {background: #fff; padding: 20px; border-radius: 10px; width: 100%; max-width: 500px; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
-    header {font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; text-align: center;}
-
-    .progress-bar {display: flex; justify-content: space-between; position: relative; margin-bottom: 30px; flex-wrap: wrap;}
-    .progress-bar::before {content: ''; position: absolute; top: 14px; left: 30px; width: calc(100% - 60px); height: 4px; background: #dcdde1; z-index: 0;}
-    .step {text-align: center; z-index: 1; flex: 1; min-width: 60px;}
-    .step p {font-size: 0.8rem; margin-bottom: 5px; color: #7f8c8d; transition: color 0.3s ease;}
-    .step p.active {color: green; font-weight: bold;}
-    .bullet {width: 25px; height: 25px; border-radius: 50%; background: #dcdde1; display: inline-block; line-height: 25px; color: white; position: relative; transition: background 0.3s ease;}
-    .bullet.active {background: green;}
-    .check {display: none; color: white; position: absolute; top: 0; left: 0; width: 25px; height: 25px; line-height: 25px; border-radius: 50%; background: green; font-size: 12px;}
-    .check.active {display: block;}
-
-    .form-outer {width: 100%; overflow: hidden;}
-    form {display: flex; width: 400%;}
-    .page {width: 25%; padding: 10px; transition: margin-left 0.5s ease-in-out;}
-    .field {margin-bottom: 15px;}
-    label {display: block; font-size: 0.9rem; margin-bottom: 5px;}
-    input, select {width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;}
-    .btns {display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;}
-    button {flex: 1; min-width: 100px; padding: 8px 16px; background: green; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s;}
-    button:hover {background: darkgreen;}
-    .success-message {text-align: center; padding: 20px;}
-    .success-message h2 {color: green; margin-bottom: 10px;}
-
-    /* RESPONSIVE */
-    @media (max-width: 600px) {
-      .progress-bar {flex-direction: column; align-items: center;}
-      .progress-bar::before {display: none;}
-      .step {margin-bottom: 10px;}
-      .page {padding: 5px;}
-      input, select, button {font-size: 1rem;}
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <title>Formulario Multipasos</title>
 </head>
-<body>
-  <div class="container">
-    <header>Registrar Cliente</header>
-    <div class="progress-bar">
-      <div class="step"><p>Paso 1</p><div class="bullet"><span>1</span></div><div class="check fas fa-check"></div></div>
-      <div class="step"><p>Paso 2</p><div class="bullet"><span>2</span></div><div class="check fas fa-check"></div></div>
-      <div class="step"><p>Paso 3</p><div class="bullet"><span>3</span></div><div class="check fas fa-check"></div></div>
-      <div class="step"><p>Fin</p><div class="bullet"><span>4</span></div><div class="check fas fa-check"></div></div>
-    </div>
+ <style>
+      * {
+        box-sizing: border-box;
+      }
 
-    <div class="form-outer">
-      <form id="multiForm">
-        <!-- Paso 1 -->
-        <div class="page slide-page">
-          <div class="field"><label for="nombre">Nombre Completo</label><input type="text" id="nombre" name="nombre" required></div>
-          <div class="field"><label for="apellidos">Apellidos</label><input type="text" id="apellidos" name="apellidos" required></div>
-          <div class="field"><label for="telefono">Teléfono</label><input type="tel" id="telefono" name="telefono" pattern="[0-9]{10}" required></div>
-          <div class="field"><label for="correo">Correo Electrónico</label><input type="email" id="correo" name="correo" required></div>
-          <div class="field"><button type="button" class="next">Siguiente</button></div>
-        </div>
+      .posicion.drop-effect {
+        animation: scaleUp 0.3s ease;
+      }
 
-        <!-- Paso 2 -->
-        <div class="page">
-          <div class="field"><label for="direccion">Dirección</label><input type="text" id="direccion" name="direccion" required></div>
-          <div class="field"><label for="ciudad">Ciudad</label><input type="text" id="ciudad" name="ciudad" required></div>
-          <div class="field btns"><button type="button" class="prev">Atrás</button><button type="button" class="next">Siguiente</button></div>
-        </div>
+      @keyframes scaleUp {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.3);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
 
-        <!-- Paso 3 -->
-        <div class="page">
-          <div class="field"><label for="nacimiento">Fecha de Nacimiento</label><input type="date" id="nacimiento" name="nacimiento" required></div>
-          <div class="field"><label for="genero">Género</label>
-            <select id="genero" name="genero" required>
-              <option value="">Selecciona</option>
-              <option value="Masculino">Masculino</option>
-              <option value="Femenino">Femenino</option>
-            </select>
+      #jugadores {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 1000px;
+        margin-bottom: 15px;
+        gap: 8px;
+        background: white;
+        padding: 10px;
+        border-radius: 10px;
+        border: 2px solid #ccc;
+        width: 90%;
+      }
+
+      .jugador-wrapper {
+        position: relative;
+        user-select: none;
+      }
+
+      .jugador {
+        width: 45px;
+        height: 45px;
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        border-radius: 50%;
+        line-height: 45px;
+        cursor: move;
+        text-align: center;
+        font-size: 14px;
+        box-shadow: 0 0 5px #a00;
+        transition: transform 0.2s;
+      }
+
+      .jugador:active {
+        transform: scale(1.1);
+      }
+
+      .tooltip {
+        visibility: hidden;
+        width: 150px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        padding: 8px;
+        border-radius: 5px;
+        position: absolute;
+        top: -90px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 12px;
+        pointer-events: none;
+      }
+
+      .jugador-wrapper:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      #cancha {
+        width: 100%;
+        aspect-ratio: 1.7 / 1;
+        height: auto;
+        max-height: 530px;
+        background-image: url("canchas.jpeg");
+        background-size: contain; /* Cambia cover por contain */
+        background-position: center;
+        background-repeat: no-repeat;
+       
+        border-radius: 50px / 20px;
+        position: relative;
+ 
+        margin-bottom: 25px;
+        user-select: none;
+        overflow: hidden;
+      }
+      @media (max-width: 700px) {
+        #cancha {
+          max-height: none;
+          height: auto;
+          min-height: 180px;
+          border-width: 3px;
+          border-radius: 20px / 10px;
+        }
+      }
+      @media (max-width: 500px) {
+        #cancha {
+          max-height: none;
+          height: auto;
+          min-height: 120px;
+          border-width: 2px;
+          border-radius: 12px / 6px;
+        }
+      }
+
+      .posicion {
+        width: 40px;
+        height: 40px;
+        border: 2px dashed white;
+        border-radius: 50%;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        transition: background-color 0.3s;
+        user-select: none;
+      }
+
+      .posicion:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+
+      /* Posiciones específicas */
+      .p1  { top: 10%;  left: 5%; }
+      .p2  { top: 25%;  left: 15%; }
+      .p3  { top: 40%;  left: 10%; }
+      .p4  { top: 60%;  left: 10%; }
+      .p5  { top: 75%;  left: 15%; }
+      .p6  { top: 20%;  left: 30%; }
+      .p7  { top: 50%;  left: 25%; }
+      .p8  { top: 80%;  left: 30%; }
+      .p9  { top: 15%;  left: 45%; }
+      .p10 { top: 50%;  left: 50%; }
+      .p11 { top: 85%;  left: 45%; }
+      .p12 { top: 20%;  left: 65%; }
+      .p13 { top: 50%;  left: 70%; }
+      .p14 { top: 80%;  left: 65%; }
+      .p15 { top: 25%;  left: 85%; }
+      .p16 { top: 40%;  left: 90%; }
+      .p17 { top: 60%;  left: 90%; }
+      .p18 { top: 75%;  left: 85%; }
+
+      .botones {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        width: 90%;
+        max-width: 600px;
+        margin-bottom: 30px;
+      }
+
+      button {
+        padding: 12px 25px;
+        font-size: 16px;
+        border: none;
+        border-radius: 7px;
+        cursor: pointer;
+        background-color: #004d00;
+        color: white;
+        transition: background 0.3s;
+        min-width: 170px;
+        user-select: none;
+        box-shadow: 0 0 8px #003300aa;
+      }
+
+      button:hover {
+        background-color: #007700;
+      }
+
+      @media (max-width: 500px) {
+        .jugador {
+          width: 36px;
+          height: 36px;
+          font-size: 12px;
+          line-height: 36px;
+        }
+        .posicion {
+          width: 32px;
+          height: 32px;
+        }
+        button {
+          min-width: 100%;
+        }
+      }
+      #tarjeta-jugador {
+        position: absolute;
+        top: 100px; /* Ajusta según necesites */
+        left: 960px; /* Un poco a la derecha de la cancha (que tiene max-width 900px) */
+        width: 200px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 0 10px #333;
+        padding: 15px;
+        user-select: none;
+        font-family: Arial, sans-serif;
+        color: #004d00;
+      }
+    </style>
+<body class="bg-gray-50 font-sans">
+  <div class="min-h-screen flex justify-center">
+    <div class="w-full max-w-lg bg-white shadow-lg rounded-lg p-8">
+      <!-- Step Indicator with Progress Bar -->
+      <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-4 w-full">
+          <!-- Step 1 -->
+          <div class="relative flex-1 flex items-center">
+            <div id="indicator-1" class="w-10 h-10 flex items-center justify-center bg-blue-500 text-white rounded-full transition-colors duration-300">1</div>
+            <div id="line-1" class="absolute w-full h-1 bg-gray-300 left-0 top-1/2 transform translate-y-[-50%] z-[-1] transition-colors duration-300"></div>
           </div>
-          <div class="field btns"><button type="button" class="prev">Atrás</button><button type="button" class="next">Siguiente</button></div>
+          <!-- Step 2 -->
+          <div class="relative flex-1 flex items-center">
+            <div id="indicator-2" class="w-10 h-10 flex items-center justify-center bg-gray-300 text-gray-600 rounded-full transition-colors duration-300">2</div>
+            <div id="line-2" class="absolute w-full h-1 bg-gray-300 left-0 top-1/2 transform translate-y-[-50%] z-[-1] transition-colors duration-300"></div>
+          </div>
+          <!-- Step 3 -->
+          <div>
+            <div id="indicator-3" class="w-10 h-10 flex items-center justify-center bg-gray-300 text-gray-600 rounded-full transition-colors duration-300">3</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="w-full bg-gray-200 rounded-full h-2 mb-8">
+        <div id="progress-bar" class="bg-blue-500 h-2 rounded-full transition-all duration-300" style="width: 0%;"></div>
+      </div>
+
+      <!-- Form Content -->
+      <form id="multi-step-form">
+        <!-- Step 1 -->
+        <div id="step-1" class="step">
+          <h2 class="text-xl font-semibold mb-4">Registro</h2>
+          <div class="space-y-4">
+            <input type="text" placeholder="Nombre" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-blue-500">
+            <input type="email" placeholder="Email" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-blue-500">
+            <input type="tel" placeholder="telefono" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-blue-500">
+          </div>
         </div>
 
-        <!-- Paso 4 -->
-        <div class="page">
-          <div class="field"><label for="usuario">Usuario</label><input type="text" id="usuario" name="usuario" required></div>
-          <div class="field"><label for="clave">Clave</label><input type="password" id="clave" name="clave" required></div>
-          <div class="field btns"><button type="button" class="prev">Atrás</button><button type="submit" class="submit">Enviar</button></div>
+        <!-- Step 2 -->
+        <div id="step-2" class="step hidden">
+          <h1>Arrastra y suelta los jugadores a la cancha</h1>
+
+          <div class="flex flex-wrap justify-center gap-2 mb-4" id="jugadores"></div>
+<div class="flex flex-col sm:flex-row justify-between gap-2 mt-8">
+            <button type="button" id="reset-cancha-btn" class="bg-red-500 text-white px-4 py-2 rounded mb-2 w-full sm:w-auto">Resetear cancha</button>
+       <!--<button type="button" id="capturar-cancha-btn" class="bg-blue-600 text-white px-4 py-2 rounded mb-2 w-full sm:w-auto">Capturar cancha</button>-->
+          </div>
+          <div id="cancha">
+            <div class="posicion p1"></div>
+            <div class="posicion p2"></div>
+            <div class="posicion p3"></div>
+            <div class="posicion p4"></div>
+            <div class="posicion p5"></div>
+            <div class="posicion p6"></div>
+            <div class="posicion p7"></div>
+            <div class="posicion p8"></div>
+            <div class="posicion p9"></div>
+            <div class="posicion p10"></div>
+            <div class="posicion p11"></div>
+            <div class="posicion p12"></div>
+            <div class="posicion p13"></div>
+            <div class="posicion p14"></div>
+            <div class="posicion p15"></div>
+            <div class="posicion p16"></div>
+            <div class="posicion p17"></div>
+            <div class="posicion p18"></div>
+          </div>
+          
+          
+        </div>
+
+        <!-- Step 3 -->
+        <div id="step-3" class="step hidden">
+          <h2 class="text-xl font-semibold mb-4">Paso 3: Revisar y enviar</h2>
+          <p class="mb-4">Por favor, revise su información antes de enviar.</p>
+          <ul class="list-disc pl-5 space-y-2">
+            <li><strong>Nombre:</strong> <span id="review-name">John Doe</span></li>
+            <li><strong>Email:</strong> <span id="review-email">john.doe@example.com</span></li>
+            <li><strong>Teléfono:</strong> <span id="review-telefono"></span></li>
+          </ul>
+          <div class="mt-6">
+            <h3 class="font-semibold mb-2">Cancha seleccionada:</h3>
+            <div id="cancha-capturada" class="border rounded p-2 bg-gray-100 flex justify-center"></div>
+            <input type="hidden" id="cancha-img-data" name="cancha-img-data" />
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="grid grid-cols-2 justify-between mt-2">
+          <button id="prev-btn" type="button" class="bg-gray-300 text-gray-700 px-2 py-2 rounded-lg hidden">Atras</button>
+          <button id="next-btn" type="button" class="bg-blue-500 text-white px-2 py-2 rounded-lg">Siguiente</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
-    const slidePage = document.querySelector(".slide-page");
-    const form = document.getElementById("multiForm");
-    const progressText = document.querySelectorAll(".step p");
-    const progressCheck = document.querySelectorAll(".step .check");
-    const bullet = document.querySelectorAll(".step .bullet");
-    const pages = document.querySelectorAll(".page");
-    let current = 1;
+    const steps = document.querySelectorAll(".step");
+    const nextBtn = document.getElementById("next-btn");
+    const prevBtn = document.getElementById("prev-btn");
+    const indicators = [
+      document.getElementById("indicator-1"),
+      document.getElementById("indicator-2"),
+      document.getElementById("indicator-3")
+    ];
+    const lines = [
+      document.getElementById("line-1"),
+      document.getElementById("line-2")
+    ];
+    const progressBar = document.getElementById("progress-bar");
+    let currentStep = 0;
 
-    function validatePage(index) {
-      const inputs = pages[index].querySelectorAll("input, select");
-      for (let input of inputs) {
-        if (!input.checkValidity()) {
-          input.reportValidity();
-          return false;
-        }
-      }
-      return true;
+    function updateIndicators(stepIndex) {
+      indicators.forEach((indicator, index) => {
+        indicator.classList.toggle("bg-blue-500", index <= stepIndex);
+        indicator.classList.toggle("text-white", index <= stepIndex);
+        indicator.classList.toggle("bg-gray-300", index > stepIndex);
+        indicator.classList.toggle("text-gray-600", index > stepIndex);
+      });
+
+      lines.forEach((line, index) => {
+        line.classList.toggle("bg-blue-500", index < stepIndex);
+        line.classList.toggle("bg-gray-300", index >= stepIndex);
+      });
     }
 
-    function goToPage(stepOffset) {
-      const currentIndex = current - 1;
-      if (stepOffset > 0 && !validatePage(currentIndex)) return;
-      const newIndex = currentIndex + stepOffset;
-      slidePage.style.marginLeft = `${-25 * newIndex}%`;
-
-      if (stepOffset > 0) {
-        bullet[current - 1].classList.add("active");
-        progressCheck[current - 1].classList.add("active");
-        progressText[current - 1].classList.add("active");
-        current++;
-      } else {
-        bullet[current - 2].classList.remove("active");
-        progressCheck[current - 2].classList.remove("active");
-        progressText[current - 2].classList.remove("active");
-        current--;
-      }
+    function updateProgressBar(stepIndex) {
+      const progressPercentage = ((stepIndex + 1) / steps.length) * 100;
+      progressBar.style.width = `${progressPercentage}%`;
     }
 
-    document.querySelectorAll(".next").forEach(btn => {
-      btn.addEventListener("click", e => {
-        e.preventDefault();
-        goToPage(1);
+    function showStep(index) {
+      steps.forEach((step, i) => {
+        step.classList.toggle("hidden", i !== index);
       });
-    });
+      prevBtn.classList.toggle("hidden", index === 0);
+      nextBtn.textContent = index === steps.length - 1 ? "Submit" : "Siguiente";
+      updateIndicators(index);
+      updateProgressBar(index);
 
-    document.querySelectorAll(".prev").forEach(btn => {
-      btn.addEventListener("click", e => {
-        e.preventDefault();
-        goToPage(-1);
-      });
-    });
-
-    form.addEventListener("submit", function(event) {
-      event.preventDefault();
-      if (!validatePage(current - 1)) return;
-      bullet[current - 1].classList.add("active");
-      progressCheck[current - 1].classList.add("active");
-      progressText[current - 1].classList.add("active");
-      document.querySelector(".form-outer").innerHTML = `
-        <div class="success-message">
-          <h2>¡Registro exitoso!</h2>
-          <p>Gracias por registrarte. Te hemos enviado un correo de confirmación.</p>
-        </div>
-      `;
-    });
-
-    // Soporte para Swipe
-    let touchStartX = 0;
-    let touchEndX = 0;
-    const threshold = 50; // distancia mínima para detectar swipe
-
-    form.addEventListener("touchstart", e => {
-      touchStartX = e.changedTouches[0].screenX;
-    });
-
-    form.addEventListener("touchend", e => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
-    });
-
-    function handleSwipe() {
-      const diff = touchEndX - touchStartX;
-      if (Math.abs(diff) > threshold) {
-        if (diff < 0) {
-          goToPage(1); // Swipe izquierda → siguiente
+      // Mostrar datos en el paso 3
+      if (index === 2) {
+        document.getElementById("review-name").textContent = document.querySelector('input[placeholder="Nombre"]').value;
+        document.getElementById("review-email").textContent = document.querySelector('input[placeholder="Email"]').value;
+        document.getElementById("review-telefono").textContent = document.querySelector('input[placeholder="telefono"]').value;
+        // Mostrar imagen de la cancha si existe o capturar si no existe
+        const imgData = document.getElementById("cancha-img-data").value;
+        if (imgData) {
+          document.getElementById("cancha-capturada").innerHTML = `<img src="${imgData}" alt="Cancha seleccionada" class="rounded shadow max-w-full" />`;
         } else {
-          goToPage(-1); // Swipe derecha → anterior
+          // Si no hay imagen, intenta capturarla automáticamente
+          const cancha = document.getElementById("cancha");
+          html2canvas(cancha, {
+            useCORS: true,
+            backgroundColor: null,
+            scale: window.devicePixelRatio || 1,
+            allowTaint: true,
+            removeContainer: true
+          }).then(canvas => {
+            const autoImgData = canvas.toDataURL("image/png");
+            document.getElementById("cancha-img-data").value = autoImgData;
+            document.getElementById("cancha-capturada").innerHTML = `<img src="${autoImgData}" alt="Cancha seleccionada" class="rounded shadow max-w-full" />`;
+          }).catch(() => {
+            document.getElementById("cancha-capturada").innerHTML = `<span class="text-red-500">No se pudo capturar la imagen de la cancha.</span>`;
+          });
         }
       }
     }
+
+    nextBtn.addEventListener("click", async () => {
+      // Validación para avanzar del paso 1 al 2
+      if (currentStep === 0) {
+        const nombre = document.querySelector('input[placeholder="Nombre"]');
+        const email = document.querySelector('input[placeholder="Email"]');
+        const telefono = document.querySelector('input[placeholder="telefono"]');
+        if (!nombre.value.trim() || !email.value.trim() || !telefono.value.trim()) {
+          alert("Por favor, completa todos los campos.");
+          return;
+        }
+      }
+      // Validación para avanzar del paso 2 al 3: todas las posiciones ocupadas
+      if (currentStep === 1) {
+        const posiciones = document.querySelectorAll(".posicion");
+        const todasOcupadas = Array.from(posiciones).every(pos => pos.children.length > 0);
+        if (!todasOcupadas) {
+          alert("Debes colocar un jugador en cada posición de la cancha.");
+          return;
+        }
+        // Captura la imagen de la cancha y la guarda en el formulario
+        const cancha = document.getElementById("cancha");
+        try {
+          const canvas = await html2canvas(cancha, {useCORS: true, backgroundColor: null});
+          const imgData = canvas.toDataURL("image/png");
+          document.getElementById("cancha-img-data").value = imgData;
+          document.getElementById("cancha-capturada").innerHTML = `<img src="${imgData}" alt="Cancha seleccionada" class="rounded shadow max-w-full" />`;
+        } catch (e) {
+          alert("No se pudo capturar la imagen de la cancha, pero puedes continuar.");
+        }
+      }
+      // Avanza de paso SIEMPRE después de la captura
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        showStep(currentStep);
+      } else {
+        alert("¡Formulario enviado!");
+      }
+    });
+
+    prevBtn.addEventListener("click", () => {
+      if (currentStep > 0) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    });
+
+    showStep(currentStep);
   </script>
+    <script>
+      const jugadoresContainer = document.getElementById("jugadores");
+      const posiciones = document.querySelectorAll(".posicion");
+
+      const nombres = [
+        "Portero",
+        "Lateral Izq.",
+        "Lateral Der.",
+        "Central 1",
+        "Central 2",
+        "Medio Def. 1",
+        "Medio Def. 2",
+        "Medio Of. 1",
+        "Medio Of. 2",
+        "Enganche",
+        "Delantero Izq.",
+        "Delantero Der.",
+        "Extremo Izq.",
+        "Extremo Der.",
+        "Punta 1",
+        "Punta 2",
+        "Segundo Punta",
+        "Falso 9",
+      ];
+
+      const camisetaUrl = "./camisa-jugador.png";
+
+      // Mostrar jugadores SOLO cuando el paso 2 está visible
+      function renderJugadores() {
+        // Evita duplicados
+        jugadoresContainer.innerHTML = "";
+        for (let i = 1; i <= 18; i++) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "jugador-wrapper";
+          wrapper.id = "jugador-wrapper" + i;
+
+          const jugador = document.createElement("div");
+          jugador.className = "jugador";
+          jugador.id = "jugador" + i;
+          jugador.draggable = true;
+          jugador.textContent = i;
+          jugador.addEventListener("dragstart", dragStart);
+
+          const tooltip = document.createElement("div");
+          tooltip.className = "tooltip";
+          tooltip.innerHTML = `
+            <strong>${nombres[i - 1]}</strong><br>
+            <img src="${camisetaUrl}" width="40" height="40" />
+          `;
+
+          wrapper.appendChild(jugador);
+          wrapper.appendChild(tooltip);
+          jugadoresContainer.appendChild(wrapper);
+
+          // Evento click para mostrar info
+          jugador.addEventListener("click", () => {
+            const nombreJugadorElem = document.getElementById("nombre-jugador");
+            const numeroJugadorElem = document.getElementById("numero-jugador");
+            nombreJugadorElem.textContent = nombres[i - 1];
+            numeroJugadorElem.textContent = i;
+            document.getElementById("tarjeta-jugador").style.display = "block";
+          });
+        }
+      }
+
+      function dragStart(e) {
+        e.dataTransfer.setData("text", e.target.parentElement.id);
+      }
+
+      posiciones.forEach((pos) => {
+        pos.addEventListener("dragover", (e) => {
+          e.preventDefault();
+        });
+
+        pos.addEventListener("drop", (e) => {
+          e.preventDefault();
+          const wrapperId = e.dataTransfer.getData("text");
+          const wrapper = document.getElementById(wrapperId);
+
+          if (pos.children.length === 0) {
+            pos.appendChild(wrapper);
+            pos.classList.add("drop-effect");
+            setTimeout(() => {
+              pos.classList.remove("drop-effect");
+            }, 300);
+          }
+        });
+      });
+
+      // Mostrar jugadores solo al entrar al paso 2
+      function showStep(index) {
+        steps.forEach((step, i) => {
+          step.classList.toggle("hidden", i !== index);
+        });
+        prevBtn.classList.toggle("hidden", index === 0);
+        nextBtn.textContent = index === steps.length - 1 ? "Enviar" : "Siguiente";
+        updateIndicators(index);
+        updateProgressBar(index);
+
+        // Mostrar datos en el paso 3
+        if (index === 2) {
+          document.getElementById("review-name").textContent = document.querySelector('input[placeholder="Nombre"]').value;
+          document.getElementById("review-email").textContent = document.querySelector('input[placeholder="Email"]').value;
+          document.getElementById("review-telefono").textContent = document.querySelector('input[placeholder="telefono"]').value;
+          // Mostrar imagen de la cancha si existe o capturar si no existe
+          const imgData = document.getElementById("cancha-img-data").value;
+          if (imgData) {
+            document.getElementById("cancha-capturada").innerHTML = `<img src="${imgData}" alt="Cancha seleccionada" class="rounded shadow max-w-full" />`;
+          } else {
+            // Si no hay imagen, intenta capturarla automáticamente
+            const cancha = document.getElementById("cancha");
+            html2canvas(cancha, {
+              useCORS: true,
+              backgroundColor: null,
+              scale: window.devicePixelRatio || 1,
+              allowTaint: true,
+              removeContainer: true
+            }).then(canvas => {
+              const autoImgData = canvas.toDataURL("image/png");
+              document.getElementById("cancha-img-data").value = autoImgData;
+              document.getElementById("cancha-capturada").innerHTML = `<img src="${autoImgData}" alt="Cancha seleccionada" class="rounded shadow max-w-full" />`;
+            }).catch(() => {
+              document.getElementById("cancha-capturada").innerHTML = `<span class="text-red-500">No se pudo capturar la imagen de la cancha.</span>`;
+            });
+          }
+        }
+
+        if (index === 1) {
+          renderJugadores();
+        }
+      }
+
+      // Botón para resetear la cancha
+      document.getElementById("reset-cancha-btn").addEventListener("click", () => {
+        // Mover todos los jugadores de las posiciones de vuelta al contenedor de jugadores
+        const jugadoresContainer = document.getElementById("jugadores");
+        document.querySelectorAll(".posicion").forEach(pos => {
+          while (pos.firstChild) {
+            jugadoresContainer.appendChild(pos.firstChild);
+          }
+        });
+        // Vuelve a renderizar los jugadores para evitar duplicados
+        renderJugadores();
+      });
+
+      // Botón para capturar la imagen de la cancha y mostrarla en el paso 3
+      document.getElementById("capturar-cancha-btn").addEventListener("click", async () => {
+        const cancha = document.getElementById("cancha");
+        try {
+          // Espera un pequeño tiempo para asegurar que el DOM esté listo
+          await new Promise(res => setTimeout(res, 100));
+          const canvas = await html2canvas(cancha, {
+            useCORS: true,
+            backgroundColor: null,
+            logging: true,
+            scale: window.devicePixelRatio || 1,
+            allowTaint: true,
+            removeContainer: true
+          });
+          const imgData = canvas.toDataURL("image/png");
+          document.getElementById("cancha-img-data").value = imgData;
+          // Si ya estamos en el paso 3, mostrar la imagen
+          if (!document.getElementById("step-3").classList.contains("hidden")) {
+            document.getElementById("cancha-capturada").innerHTML = `<img src="${imgData}" alt="Cancha seleccionada" class="rounded shadow max-w-full" />`;
+          } else {
+            alert("¡Cancha capturada! Avanza al siguiente paso para verla en el registro.");
+          }
+        } catch (e) {
+          alert("No se pudo capturar la imagen de la cancha. Si tienes extensiones de navegador de bloqueo de contenido, intenta desactivarlas o recarga la página.");
+        }
+      });
+    </script>
 </body>
 </html>
+
+
+

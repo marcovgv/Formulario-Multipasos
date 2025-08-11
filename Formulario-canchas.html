@@ -2,61 +2,51 @@
 <html lang="es" dir="ltr">
   <head>
     <meta charset="utf-8" />
-    <title>Formulario Multipasos </title>
+    <title>Formulario Multipasos</title>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
-        /* Ajustes para móviles */
-@media (max-width: 600px) {
-  /* Contenedor más ancho en móviles */
-  .container {
-    max-width: 100%;
-    padding: 15px;
-  }
+      
+      /* Ajustes para móviles */
+      @media (max-width: 600px) {
+        .container {
+          max-width: 100%;
+          padding: 15px;
+        }
+        .progress-bar p {
+          font-size: 0.75rem;
+        }
+        #cancha {
+          width: 100vw;
+          max-width: 100%;
+          height: auto;
+          aspect-ratio: 1.7 / 1;
+          border-width: 3px;
+          border-radius: 30px / 15px;
+        }
+        .jugador {
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+          line-height: 40px;
+        }
+        .posicion {
+          width: 36px;
+          height: 36px;
+          border-width: 2px;
+        }
+        button {
+          min-width: 100%;
+          padding: 14px 0;
+          font-size: 18px;
+        }
+        input, select {
+          font-size: 1.1rem;
+          padding: 12px;
+        }
+      }
 
-  /* Texto pasos centrado y más pequeño */
-  .progress-bar p {
-    font-size: 0.75rem;
-  }
-
-  /* Cancha con proporción fija y adaptable */
-  #cancha {
-    width: 100vw; /* ocupar ancho total del móvil */
-    max-width: 100%;
-    height: auto;
-    aspect-ratio: 1.7 / 1;
-    border-width: 3px;
-    border-radius: 30px / 15px;
-  }
-
-  /* Jugadores y posiciones un poco más grandes para tocar mejor */
-  .jugador {
-    width: 40px;
-    height: 40px;
-    font-size: 16px;
-    line-height: 40px;
-  }
-
-  .posicion {
-    width: 36px;
-    height: 36px;
-    border-width: 2px;
-  }
-
-  /* Botones más grandes y anchos */
-  button {
-    min-width: 100%;
-    padding: 14px 0;
-    font-size: 18px;
-  }
-
-  /* Margen y padding para inputs mejor táctil */
-  input, select {
-    font-size: 1.1rem;
-    padding: 12px;
-  }
-}
       * {
         margin: 0;
         padding: 0;
@@ -156,12 +146,12 @@
       }
       form {
         display: flex;
-        width: 400%;
+        width: 200%; /* Solo 2 pasos visibles */
+        transition: margin-left 0.5s ease-in-out;
       }
       .page {
-        width: 25%;
+        width: 50%;
         padding: 10px;
-        transition: margin-left 0.5s ease-in-out;
       }
       .field {
         margin-bottom: 15px;
@@ -195,6 +185,7 @@
         border-radius: 5px;
         cursor: pointer;
         transition: background 0.3s;
+        user-select: none;
       }
       button:hover {
         background: darkgreen;
@@ -230,11 +221,10 @@
         }
       }
 
-      /*cancha*/
+      /* cancha */
       .posicion.drop-effect {
         animation: scaleUp 0.3s ease;
       }
-
       @keyframes scaleUp {
         0% {
           transform: scale(1);
@@ -246,7 +236,6 @@
           transform: scale(1);
         }
       }
-
       #jugadores {
         display: flex;
         flex-wrap: wrap;
@@ -260,12 +249,10 @@
         border: 2px solid #ccc;
         width: 90%;
       }
-
       .jugador-wrapper {
         position: relative;
         user-select: none;
       }
-
       .jugador {
         width: 45px;
         height: 45px;
@@ -279,12 +266,11 @@
         font-size: 14px;
         box-shadow: 0 0 5px #a00;
         transition: transform 0.2s;
+        user-select: none;
       }
-
       .jugador:active {
         transform: scale(1.1);
       }
-
       .tooltip {
         visibility: hidden;
         width: 150px;
@@ -303,15 +289,12 @@
         font-size: 12px;
         pointer-events: none;
       }
-
       .jugador-wrapper:hover .tooltip {
         visibility: visible;
         opacity: 1;
       }
-
       #cancha {
         width: 95vw;
-       
         max-height: 530px;
         background-image: url("canchas.jpeg");
         background-size: cover;
@@ -325,10 +308,9 @@
         user-select: none;
         overflow: hidden;
         max-width: 100%;
-  height: auto;
-  aspect-ratio: 1.7 / 1;
+        height: auto;
+        aspect-ratio: 1.7 / 1;
       }
-
       .posicion {
         width: 40px;
         height: 40px;
@@ -343,448 +325,423 @@
         transition: background-color 0.3s;
         user-select: none;
       }
-
       .posicion:hover {
         background-color: rgba(255, 255, 255, 0.25);
       }
-
       /* Posiciones específicas */
       .p1 {
-        top: 50%;
-        left: 3%;
+        top: 10%;
+        left: 48%;
       }
       .p2 {
-        top: 30%;
+        top: 25%;
         left: 10%;
       }
       .p3 {
-        top: 70%;
-        left: 10%;
+        top: 25%;
+        left: 25%;
       }
       .p4 {
-        top: 40%;
-        left: 18%;
+        top: 25%;
+        left: 40%;
       }
       .p5 {
-        top: 60%;
-        left: 18%;
+        top: 25%;
+        left: 60%;
       }
       .p6 {
-        top: 35%;
-        left: 30%;
+        top: 25%;
+        left: 75%;
       }
       .p7 {
-        top: 65%;
-        left: 30%;
+        top: 45%;
+        left: 20%;
       }
       .p8 {
-        top: 30%;
-        left: 45%;
+        top: 45%;
+        left: 40%;
       }
       .p9 {
-        top: 70%;
-        left: 45%;
+        top: 45%;
+        left: 60%;
       }
       .p10 {
-        top: 50%;
-        left: 50%;
-      }
-      .p11 {
-        top: 25%;
-        left: 65%;
-      }
-      .p12 {
-        top: 75%;
-        left: 65%;
-      }
-      .p13 {
-        top: 35%;
-        left: 75%;
-      }
-      .p14 {
-        top: 65%;
-        left: 75%;
-      }
-      .p15 {
         top: 45%;
         left: 80%;
       }
-      .p16 {
-        top: 55%;
-        left: 80%;
-      }
-      .p17 {
-        top: 35%;
-        left: 90%;
-      }
-      .p18 {
-        top: 65%;
-        left: 90%;
+      .p11 {
+        top: 75%;
+        left: 48%;
       }
 
-      .botones {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-        width: 90%;
-        max-width: 600px;
-        margin-bottom: 30px;
-      }
-
-      button {
-        padding: 12px 25px;
-        font-size: 16px;
-        border: none;
-        border-radius: 7px;
-        cursor: pointer;
-        background-color: #004d00;
-        color: white;
-        transition: background 0.3s;
-        min-width: 170px;
+      /* Tarjeta jugador */
+      #tarjeta-jugador {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        display: none;
+        z-index: 9999;
+        min-width: 280px;
+        max-width: 90vw;
         user-select: none;
-        box-shadow: 0 0 8px #003300aa;
+      }
+      #tarjeta-jugador img {
+        display: block;
+        margin: 0 auto 15px;
+        width: 110px;
+        border-radius: 20px;
+      }
+      #tarjeta-jugador h3 {
+        text-align: center;
+        margin-bottom: 8px;
+        font-size: 1.4rem;
+      }
+      #tarjeta-jugador p {
+        text-align: center;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        color: #333;
+      }
+      #tarjeta-jugador button {
+        display: block;
+        margin: 15px auto 0;
+        background: #cc0000;
       }
 
-      button:hover {
-        background-color: #007700;
+      /* Modal de éxito */
+      #modal-exito {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
       }
-
-      @media (max-width: 500px) {
-        .jugador {
-          width: 36px;
-          height: 36px;
-          font-size: 12px;
-          line-height: 36px;
-        }
-        .posicion {
-          width: 32px;
-          height: 32px;
-        }
-        button {
-          min-width: 100%;
-        }
+      #modal-exito div {
+        background: white;
+        padding: 30px 20px;
+        border-radius: 12px;
+        text-align: center;
+        min-width: 250px;
       }
-     #tarjeta-jugador {
-  position: relative; /* Cambiado para que esté dentro del flujo del formulario */
-  top: auto;
-  left: auto;
-  margin-top: 15px;
-  width: 100%;
-  max-width: 400px;
-  pointer-events: auto;
-  opacity: 1;
-  transition: none;
-  box-shadow: none;
-}
+      #modal-exito h2 {
+        color: green;
+        margin-bottom: 10px;
+      }
     </style>
   </head>
+
   <body>
     <div class="container">
-      <header>Formulario</header>
+      <header>Formulario Multipasos</header>
+
       <div class="progress-bar">
         <div class="step">
-          <p>Registro</p>
-          <div class="bullet"><span>1</span></div>
-          <div class="check fas fa-check"></div>
+          <p class="active" id="step-1-text">Paso 1</p>
+          <div class="bullet active" id="step-1-bullet"><span class="check active">&#10003;</span></div>
         </div>
         <div class="step">
-          <p>Cancha</p>
-          <div class="bullet"><span>2</span></div>
-          <div class="check fas fa-check"></div>
+          <p id="step-2-text">Paso 2</p>
+          <div class="bullet" id="step-2-bullet"><span class="check">&#10003;</span></div>
         </div>
-
-       
+      </div>
 
       <div class="form-outer">
-        <form id="multiForm">
+        <form id="form">
           <!-- Paso 1 -->
-          <div class="page slide-page">
+          <div class="page">
             <div class="field">
-              <label for="nombre">Nombre Completo</label
-              ><input type="text" id="nombre" name="nombre" required />
+              <label for="nombre">Nombre:</label>
+              <input type="text" id="nombre" required />
             </div>
             <div class="field">
-              <label for="apellidos">Apellidos</label
-              ><input type="text" id="apellidos" name="apellidos" required />
+              <label for="apellido">Apellido:</label>
+              <input type="text" id="apellido" required />
             </div>
             <div class="field">
-              <label for="telefono">Teléfono</label
-              ><input
-                type="tel"
-                id="telefono"
-                name="telefono"
-                pattern="[0-9]{10}"
-                required
-              />
+              <label for="telefono">Teléfono:</label>
+              <input type="tel" id="telefono" required />
             </div>
             <div class="field">
-              <label for="correo">Correo Electrónico</label
-              ><input type="email" id="correo" name="correo" required />
-            </div>
-            <div class="field">
-              <button type="button" class="next">Siguiente</button>
+              <label for="email">Correo electrónico:</label>
+              <input type="email" id="email" required />
             </div>
           </div>
 
           <!-- Paso 2 -->
           <div class="page">
-            <h1>Arrastra y suelta los jugadores a la cancha</h1>
-
-            <div id="jugadores"></div>
+            <div id="jugadores">
+              <!-- Jugadores para arrastrar -->
+              <div class="jugador-wrapper">
+                <div class="jugador" id="jugador1" draggable="true" data-nombre="Juan Pérez" data-numero="1" title="Juan Pérez - #1">1</div>
+                <div class="tooltip">Juan Pérez - #1</div>
+              </div>
+              <div class="jugador-wrapper">
+                <div class="jugador" id="jugador2" draggable="true" data-nombre="Carlos López" data-numero="2" title="Carlos López - #2">2</div>
+                <div class="tooltip">Carlos López - #2</div>
+              </div>
+              <div class="jugador-wrapper">
+                <div class="jugador" id="jugador3" draggable="true" data-nombre="Miguel Ruiz" data-numero="3" title="Miguel Ruiz - #3">3</div>
+                <div class="tooltip">Miguel Ruiz - #3</div>
+              </div>
+              <div class="jugador-wrapper">
+                <div class="jugador" id="jugador4" draggable="true" data-nombre="Luis Gómez" data-numero="4" title="Luis Gómez - #4">4</div>
+                <div class="tooltip">Luis Gómez - #4</div>
+              </div>
+              <div class="jugador-wrapper">
+                <div class="jugador" id="jugador5" draggable="true" data-nombre="Pedro Sánchez" data-numero="5" title="Pedro Sánchez - #5">5</div>
+                <div class="tooltip">Pedro Sánchez - #5</div>
+              </div>
+            </div>
 
             <div id="cancha">
-              <div class="posicion p1"></div>
-              <div class="posicion p2"></div>
-              <div class="posicion p3"></div>
-              <div class="posicion p4"></div>
-              <div class="posicion p5"></div>
-              <div class="posicion p6"></div>
-              <div class="posicion p7"></div>
-              <div class="posicion p8"></div>
-              <div class="posicion p9"></div>
-              <div class="posicion p10"></div>
-              <div class="posicion p11"></div>
-              <div class="posicion p12"></div>
-              <div class="posicion p13"></div>
-              <div class="posicion p14"></div>
-              <div class="posicion p15"></div>
-              <div class="posicion p16"></div>
-              <div class="posicion p17"></div>
-              <div class="posicion p18"></div>
+              <div class="posicion p1" data-pos="p1"></div>
+              <div class="posicion p2" data-pos="p2"></div>
+              <div class="posicion p3" data-pos="p3"></div>
+              <div class="posicion p4" data-pos="p4"></div>
+              <div class="posicion p5" data-pos="p5"></div>
+              <div class="posicion p6" data-pos="p6"></div>
+              <div class="posicion p7" data-pos="p7"></div>
+              <div class="posicion p8" data-pos="p8"></div>
+              <div class="posicion p9" data-pos="p9"></div>
+              <div class="posicion p10" data-pos="p10"></div>
+              <div class="posicion p11" data-pos="p11"></div>
             </div>
+            <div id="cancha-capturada" style="text-align:center; margin:10px 0;"></div>
 
-            <div id="tarjeta-jugador" style="display: none">
-              <h3 id="nombre-jugador"></h3>
-              <p>Número: <span id="numero-jugador"></span></p>
-              <img
-                id="imagen-jugador"
-                src="./camisa-jugador.png"
-                width="60"
-                height="60"
-                alt="Camiseta jugador"
-              />
-            </div>
-
-            <div class="botones">
-              <button onclick="capturarCancha()">📷 Capturar Posiciones</button>
-            </div>
-            <div class="field btns">
-              <button type="button" class="prev">Atrás</button
-              ><button type="button" class="next">Siguiente</button>
+            <div class="btns">
+              <button type="button" id="btn-atras">Atrás</button>
+              <button type="button" id="btn-siguiente">Siguiente</button>
+              <button type="button" id="btn-finalizar" style="display:none">Finalizar</button>
+              <button type="button" id="btn-capturar" style="display:none">Capturar cancha</button>
             </div>
           </div>
-
-        
-
-          <!-- Paso 3 -->
-          
         </form>
       </div>
     </div>
-    <!-- Formulario -->
+
+    <!-- Tarjeta jugador -->
+    <div id="tarjeta-jugador">
+      <img src="camiseta.png" alt="Imagen jugador" id="imagen-jugador" />
+      <h3 id="nombre-jugador"></h3>
+      <p>Número: <span id="numero-jugador"></span></p>
+      <button id="btn-cerrar-tarjeta">Cerrar</button>
+    </div>
+
+    <!-- Modal de éxito -->
+    <div id="modal-exito" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:10000; align-items:center; justify-content:center;">
+      <div style="background:white; padding:30px 20px; border-radius:12px; text-align:center; min-width:250px;">
+        <h2 style="color:green;">¡Registro finalizado con éxito!</h2>
+        <p>Su formulario ha sido enviado correctamente.</p>
+        <button id="btn-cerrar-modal" style="margin-top:15px; background:green;">Cerrar</button>
+      </div>
+    </div>
+
     <script>
-      const slidePage = document.querySelector(".slide-page");
-      const form = document.getElementById("multiForm");
-      const progressText = document.querySelectorAll(".step p");
-      const progressCheck = document.querySelectorAll(".step .check");
-      const bullet = document.querySelectorAll(".step .bullet");
+      // Variables para pasos
+      const form = document.getElementById("form");
       const pages = document.querySelectorAll(".page");
-      let current = 1;
+      const progressText = [document.getElementById("step-1-text"), document.getElementById("step-2-text")];
+      const progressBullets = [document.getElementById("step-1-bullet"), document.getElementById("step-2-bullet")];
+      const progressChecks = document.querySelectorAll(".check");
+      let currentStep = 0;
 
-      function validatePage(index) {
-        const inputs = pages[index].querySelectorAll("input, select");
-        for (let input of inputs) {
-          if (!input.checkValidity()) {
-            input.reportValidity();
-            return false;
-          }
+      const btnAtras = document.getElementById("btn-atras");
+      const btnSiguiente = document.getElementById("btn-siguiente");
+      const btnFinalizar = document.getElementById("btn-finalizar");
+      const btnCapturar = document.getElementById("btn-capturar");
+
+      // Avanzar paso
+      btnSiguiente.addEventListener("click", () => {
+        if (currentStep < pages.length - 1) {
+          currentStep++;
+          updateForm();
         }
-        return true;
-      }
+      });
 
-      function goToPage(stepOffset) {
-        const currentIndex = current - 1;
-        if (stepOffset > 0 && !validatePage(currentIndex)) return;
-        const newIndex = currentIndex + stepOffset;
-        slidePage.style.marginLeft = `${-25 * newIndex}%`;
-
-        if (stepOffset > 0) {
-          bullet[current - 1].classList.add("active");
-          progressCheck[current - 1].classList.add("active");
-          progressText[current - 1].classList.add("active");
-          current++;
-        } else {
-          bullet[current - 2].classList.remove("active");
-          progressCheck[current - 2].classList.remove("active");
-          progressText[current - 2].classList.remove("active");
-          current--;
+      // Retroceder paso
+      btnAtras.addEventListener("click", () => {
+        if (currentStep > 0) {
+          currentStep--;
+          updateForm();
         }
-      }
-
-      document.querySelectorAll(".next").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          goToPage(1);
-        });
       });
 
-      document.querySelectorAll(".prev").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          goToPage(-1);
-        });
-      });
-
-      form.addEventListener("submit", function (event) {
-        event.preventDefault();
-        if (!validatePage(current - 1)) return;
-        bullet[current - 1].classList.add("active");
-        progressCheck[current - 1].classList.add("active");
-        progressText[current - 1].classList.add("active");
-        document.querySelector(".form-outer").innerHTML = `
-        <div class="success-message">
-          <h2>¡Registro exitoso!</h2>
-          <p>Gracias por registrarte. Te hemos enviado un correo de confirmación.</p>
-        </div>
-      `;
-      });
-
-      // Soporte para Swipe
-      let touchStartX = 0;
-      let touchEndX = 0;
-      const threshold = 50; // distancia mínima para detectar swipe
-
-      form.addEventListener("touchstart", (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-      });
-
-      form.addEventListener("touchend", (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-      });
-
-      function handleSwipe() {
-        const diff = touchEndX - touchStartX;
-        if (Math.abs(diff) > threshold) {
-          if (diff < 0) {
-            goToPage(1); // Swipe izquierda → siguiente
+      // Actualizar UI formulario
+      function updateForm() {
+        form.style.marginLeft = `-${currentStep * 50}%`;
+        progressText.forEach((p, i) => {
+          if (i <= currentStep) {
+            p.classList.add("active");
+            progressBullets[i].classList.add("active");
+            progressChecks[i].classList.add("active");
           } else {
-            goToPage(-1); // Swipe derecha → anterior
+            p.classList.remove("active");
+            progressBullets[i].classList.remove("active");
+            progressChecks[i].classList.remove("active");
           }
-        }
+        });
+
+        btnAtras.style.display = currentStep === 0 ? "none" : "inline-block";
+        btnSiguiente.style.display = currentStep === pages.length - 1 ? "none" : "inline-block";
+        btnFinalizar.style.display = currentStep === pages.length - 1 ? "inline-block" : "none";
+        btnCapturar.style.display = currentStep === pages.length - 1 ? "inline-block" : "none";
       }
-    </script>
-    <!-- Script para la cancha -->
-    <script>
-      const jugadoresContainer = document.getElementById("jugadores");
+      updateForm();
+
+      // Drag and Drop jugadores a posiciones
+      const jugadores = document.querySelectorAll(".jugador");
       const posiciones = document.querySelectorAll(".posicion");
 
-      const nombres = [
-        "Portero",
-        "Lateral Izq.",
-        "Lateral Der.",
-        "Central 1",
-        "Central 2",
-        "Medio Def. 1",
-        "Medio Def. 2",
-        "Medio Of. 1",
-        "Medio Of. 2",
-        "Enganche",
-        "Delantero Izq.",
-        "Delantero Der.",
-        "Extremo Izq.",
-        "Extremo Der.",
-        "Punta 1",
-        "Punta 2",
-        "Segundo Punta",
-        "Falso 9",
-      ];
-
-      const camisetaUrl = "./camisa-jugador.png";
-
-      // Crear jugadores con wrapper que tiene id
-      for (let i = 1; i <= 18; i++) {
-        const wrapper = document.createElement("div");
-        wrapper.className = "jugador-wrapper";
-        wrapper.id = "jugador-wrapper" + i;
-
-        const jugador = document.createElement("div");
-        jugador.className = "jugador";
-        jugador.id = "jugador" + i;
-        jugador.draggable = true;
-        jugador.textContent = i;
+      jugadores.forEach((jugador) => {
         jugador.addEventListener("dragstart", dragStart);
+        jugador.addEventListener("click", mostrarTarjetaJugador);
+      });
 
-        const tooltip = document.createElement("div");
-        tooltip.className = "tooltip";
-        tooltip.innerHTML = `
-          <strong>${nombres[i - 1]}</strong><br>
-          <img src="${camisetaUrl}" width="40" height="40" />
-        `;
-
-        wrapper.appendChild(jugador);
-        wrapper.appendChild(tooltip);
-        jugadoresContainer.appendChild(wrapper);
-      }
-
-      function dragStart(e) {
-        // Enviar el id del wrapper
-        e.dataTransfer.setData("text", e.target.parentElement.id);
-      }
-
-      // Permitir drop sobre las posiciones
       posiciones.forEach((pos) => {
-        pos.addEventListener("dragover", (e) => {
-          e.preventDefault();
-        });
-
-        pos.addEventListener("drop", (e) => {
-          e.preventDefault();
-          const wrapperId = e.dataTransfer.getData("text");
-          const wrapper = document.getElementById(wrapperId);
-
-          // Evitar que ya haya un jugador en esa posición
-          if (pos.children.length === 0) {
-            pos.appendChild(wrapper);
-
-            pos.classList.add("drop-effect");
-            setTimeout(() => {
-              pos.classList.remove("drop-effect");
-            }, 300);
-          }
+        pos.addEventListener("dragover", dragOver);
+        pos.addEventListener("drop", drop);
+        pos.addEventListener("click", () => {
+          // Si la posición tiene un jugador, mostrar info
+          const jugador = pos.querySelector(".jugador");
+          if (jugador) mostrarTarjetaJugador({ currentTarget: jugador });
         });
       });
 
-      // Función para capturar cancha con html2canvas
-      function capturarCancha() {
-        const cancha = document.getElementById("cancha");
-        html2canvas(cancha).then((canvas) => {
-          // Abre la imagen en nueva pestaña
-          const dataURL = canvas.toDataURL("image/png");
-          const nuevaVentana = window.open();
-          nuevaVentana.document.write(
-            `<img src="${dataURL}" alt="Captura cancha">`
-          );
-        });
+      function dragStart(e) {
+        e.dataTransfer.setData("text/plain", e.target.id);
+      }
+      function dragOver(e) {
+        e.preventDefault();
+      }
+      function drop(e) {
+        e.preventDefault();
+        const id = e.dataTransfer.getData("text");
+        const jugador = document.getElementById(id);
+
+        // Si la posición ya tiene jugador, moverlo a la zona de jugadores para liberar
+        if (e.target.classList.contains("posicion")) {
+          const posicion = e.target;
+
+          if (posicion.querySelector(".jugador")) {
+            // Mover jugador actual fuera
+            const jugadorExistente = posicion.querySelector(".jugador");
+            document.getElementById("jugadores").appendChild(jugadorExistente);
+          }
+
+          posicion.appendChild(jugador);
+          posicion.classList.add("drop-effect");
+          setTimeout(() => {
+            posicion.classList.remove("drop-effect");
+          }, 300);
+        }
       }
 
+      // Mostrar tarjeta con info jugador
       const tarjeta = document.getElementById("tarjeta-jugador");
       const nombreJugadorElem = document.getElementById("nombre-jugador");
       const numeroJugadorElem = document.getElementById("numero-jugador");
+      const imagenJugadorElem = document.getElementById("imagen-jugador");
+      const btnCerrarTarjeta = document.getElementById("btn-cerrar-tarjeta");
 
-      // Añadir evento click a cada jugador para mostrar info en tarjeta
-      document.querySelectorAll(".jugador").forEach((jugador) => {
-        jugador.addEventListener("click", () => {
-          const id = jugador.id; // ej. jugador1, jugador2...
-          const numero = id.replace("jugador", "");
-          const nombre = nombres[parseInt(numero) - 1];
+      function mostrarTarjetaJugador(event) {
+        let jugadorElem;
+        if (event.currentTarget) {
+          jugadorElem = event.currentTarget;
+        } else {
+          jugadorElem = event.target;
+        }
 
-          nombreJugadorElem.textContent = nombre;
-          numeroJugadorElem.textContent = numero;
+        const nombre = jugadorElem.getAttribute("data-nombre");
+        const numero = jugadorElem.getAttribute("data-numero");
 
-          tarjeta.style.display = "block";
+        nombreJugadorElem.textContent = nombre;
+        numeroJugadorElem.textContent = numero;
+        imagenJugadorElem.src = "camiseta.png";
+
+        tarjeta.style.display = "block";
+      }
+
+      btnCerrarTarjeta.addEventListener("click", () => {
+        tarjeta.style.display = "none";
+      });
+
+      // Cerrar tarjeta si se hace click fuera
+      document.addEventListener("click", (e) => {
+        if (!tarjeta.contains(e.target) && !e.target.classList.contains("jugador")) {
+          tarjeta.style.display = "none";
+        }
+      });
+
+      // Validación de campos paso 1
+      function validarPaso1() {
+        const nombre = document.getElementById("nombre").value.trim();
+        const apellido = document.getElementById("apellido").value.trim();
+        const telefono = document.getElementById("telefono").value.trim();
+        const email = document.getElementById("email").value.trim();
+        return nombre && apellido && telefono && email;
+      }
+
+      // Validación de cancha llena
+      function canchaCompleta() {
+        return Array.from(document.querySelectorAll(".posicion")).every(pos => pos.querySelector(".jugador"));
+      }
+
+      // Mostrar imagen capturada en el formulario
+      function mostrarImagenCapturada(imgData) {
+        const div = document.getElementById("cancha-capturada");
+        div.innerHTML = `<img src="${imgData}" alt="Cancha capturada" style="max-width:100%; border-radius:10px; border:2px solid #008000; margin-top:10px;" />`;
+      }
+
+      // Botón siguiente: validación de paso 1
+      btnSiguiente.addEventListener("click", () => {
+        if (currentStep === 0) {
+          if (!validarPaso1()) {
+            alert("Por favor, complete todos los campos del Paso 1.");
+            return;
+          }
+        }
+        currentStep++;
+        updateForm();
+      });
+
+      // Botón finalizar: validación de cancha y captura imagen
+      btnFinalizar.addEventListener("click", async () => {
+        if (!canchaCompleta()) {
+          alert("Debe colocar un jugador en cada posición de la cancha.");
+          return;
+        }
+        // Captura la imagen de la cancha y la muestra en el formulario
+        await html2canvas(document.getElementById("cancha")).then((canvas) => {
+          const imgData = canvas.toDataURL("image/png");
+          mostrarImagenCapturada(imgData);
         });
+        // Muestra el modal de éxito
+        document.getElementById("modal-exito").style.display = "flex";
+      });
+
+      // Botón capturar: solo muestra la imagen, no finaliza
+      btnCapturar.addEventListener("click", () => {
+        html2canvas(document.getElementById("cancha")).then((canvas) => {
+          const imgData = canvas.toDataURL("image/png");
+          mostrarImagenCapturada(imgData);
+        });
+      });
+
+      // Cerrar modal de éxito
+      document.getElementById("btn-cerrar-modal").addEventListener("click", () => {
+        document.getElementById("modal-exito").style.display = "none";
+        // Opcional: resetear formulario
+        // location.reload();
       });
     </script>
   </body>
