@@ -444,6 +444,7 @@
     <script>
       const jugadoresContainer = document.getElementById("jugadores");
       const posiciones = document.querySelectorAll(".posicion");
+      let jugadorSeleccionado = null; // Para modo clic en móvil
 
       const nombres = [
         "Portero",
@@ -470,7 +471,6 @@
 
       // Mostrar jugadores SOLO cuando el paso 2 está visible
       function renderJugadores() {
-        // Evita duplicados
         jugadoresContainer.innerHTML = "";
         for (let i = 1; i <= 18; i++) {
           const wrapper = document.createElement("div");
@@ -484,6 +484,22 @@
           jugador.textContent = i;
           jugador.addEventListener("dragstart", dragStart);
 
+          // Selección por clic (para móvil)
+          jugador.addEventListener("click", function (e) {
+            // Si ya está seleccionado, deselecciona
+            if (jugadorSeleccionado === wrapper) {
+              wrapper.classList.remove("ring", "ring-blue-500");
+              jugadorSeleccionado = null;
+              return;
+            }
+            // Deselecciona el anterior
+            if (jugadorSeleccionado) {
+              jugadorSeleccionado.classList.remove("ring", "ring-blue-500");
+            }
+            jugadorSeleccionado = wrapper;
+            wrapper.classList.add("ring", "ring-blue-500");
+          });
+
           const tooltip = document.createElement("div");
           tooltip.className = "tooltip";
           tooltip.innerHTML = `
@@ -496,7 +512,7 @@
           jugadoresContainer.appendChild(wrapper);
 
           // Evento click para mostrar info
-          jugador.addEventListener("click", () => {
+          jugador.addEventListener("dblclick", () => {
             const nombreJugadorElem = document.getElementById("nombre-jugador");
             const numeroJugadorElem = document.getElementById("numero-jugador");
             nombreJugadorElem.textContent = nombres[i - 1];
@@ -510,6 +526,7 @@
         e.dataTransfer.setData("text", e.target.parentElement.id);
       }
 
+      // Drag & Drop
       posiciones.forEach((pos) => {
         pos.addEventListener("dragover", (e) => {
           e.preventDefault();
@@ -526,6 +543,19 @@
             setTimeout(() => {
               pos.classList.remove("drop-effect");
             }, 300);
+          }
+        });
+
+        // Soporte para pegar por clic en móvil
+        pos.addEventListener("click", function () {
+          if (jugadorSeleccionado && pos.children.length === 0) {
+            pos.appendChild(jugadorSeleccionado);
+            pos.classList.add("drop-effect");
+            setTimeout(() => {
+              pos.classList.remove("drop-effect");
+            }, 300);
+            jugadorSeleccionado.classList.remove("ring", "ring-blue-500");
+            jugadorSeleccionado = null;
           }
         });
       });
